@@ -1,8 +1,8 @@
 package junseok.snr.ecommerce.order
 
 import junseok.snr.ecommerce.core.CoreConfiguration
+import org.springframework.boot.SpringApplication
 import org.springframework.boot.autoconfigure.SpringBootApplication
-import org.springframework.boot.runApplication
 import org.springframework.context.annotation.Import
 
 @Import(CoreConfiguration::class)
@@ -10,5 +10,7 @@ import org.springframework.context.annotation.Import
 class OrderApplication
 
 fun main(args: Array<String>) {
-    runApplication<OrderApplication>(*args)
+    val springApplication = SpringApplication(OrderApplication::class.java)
+    springApplication.setAdditionalProfiles("development")
+    springApplication.run(*args)
 }
