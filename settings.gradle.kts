@@ -1,2 +1,2 @@
 rootProject.name = "e-commerce"
-include("core", "order")
+include("core", "order", "order-reactive")

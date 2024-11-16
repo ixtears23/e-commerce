@@ -1,22 +1,70 @@
 services:
   mongodb:
     image: 'mongo:latest'
+    container_name: mongodb
     environment:
       - 'MONGO_INITDB_DATABASE=mydatabase'
-      - 'MONGO_INITDB_ROOT_PASSWORD=secret'
       - 'MONGO_INITDB_ROOT_USERNAME=root'
+      - 'MONGO_INITDB_ROOT_PASSWORD=secret'
     ports:
       - '27017:27017'
-  mysql:
+    volumes:
+      - 'mongodb_data:/data/db'  # MongoDB 데이터 영구 저장소
+    networks:
+      - backend_network
+
+  mysql-e-commerce:
     image: 'mysql:latest'
+    container_name: mysql_e_commerce
     environment:
-      - 'MYSQL_DATABASE=mydatabase'
+      - 'MYSQL_DATABASE=e-commerce'
+      - 'MYSQL_USER=junseok'
       - 'MYSQL_PASSWORD=secret'
       - 'MYSQL_ROOT_PASSWORD=verysecret'
-      - 'MYSQL_USER=myuser'
+      - 'MYSQL_ALLOW_EMPTY_PASSWORD=no'
     ports:
-      - '2206:3306'
+      - '2200:3306'
+    volumes:
+      - 'mysql_e_commerce_data:/var/lib/mysql'  # MySQL 데이터 영구 저장소
+    networks:
+      - backend_network
+    restart: always
+
+  mysql-e-commerce-order:
+    image: 'mysql:latest'
+    container_name: mysql_e_commerce_order
+    environment:
+      - 'MYSQL_DATABASE=e-commerce-order'
+      - 'MYSQL_USER=junseok'
+      - 'MYSQL_PASSWORD=secret'
+      - 'MYSQL_ROOT_PASSWORD=verysecret'
+      - 'MYSQL_ALLOW_EMPTY_PASSWORD=no'
+    ports:
+      - '2201:3306'
+    volumes:
+      - 'mysql_e_commerce_order_data:/var/lib/mysql'  # MySQL 데이터 영구 저장소
+    networks:
+      - backend_network
+    restart: always
+
   redis:
     image: 'redis:latest'
+    container_name: redis
+    command: redis-server --requirepass "redispassword"  # Redis 비밀번호 설정
     ports:
       - '1379:6379'
+    volumes:
+      - 'redis_data:/data'  # Redis 데이터 영구 저장소
+    networks:
+      - backend_network
+    restart: always
+
+networks:
+  backend_network:
+    driver: bridge
+
+volumes:
+  mongodb_data:
+  mysql_e_commerce_data:
+  mysql_e_commerce_order_data:
+  redis_data:

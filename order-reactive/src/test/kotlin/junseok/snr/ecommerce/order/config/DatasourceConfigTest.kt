@@ -1,6 +1,6 @@
 package junseok.snr.ecommerce.order.config
 
-import com.zaxxer.hikari.HikariDataSource
+import io.r2dbc.spi.ConnectionFactory
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -12,11 +12,13 @@ import org.springframework.test.context.ActiveProfiles
 class DatasourceConfigTest {
 
     @Autowired
-    lateinit var hikariDataSource: HikariDataSource
+    lateinit var connectionFactory: ConnectionFactory
+
+
 
     @Test
     fun `should load development connectionFactory bean`() {
-        assertNotNull(hikariDataSource)
+        assertNotNull(connectionFactory)
     }
 
 }

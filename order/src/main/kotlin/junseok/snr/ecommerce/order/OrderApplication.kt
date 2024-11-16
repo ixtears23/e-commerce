@@ -11,6 +11,6 @@ class OrderApplication
 
 fun main(args: Array<String>) {
     val springApplication = SpringApplication(OrderApplication::class.java)
-    springApplication.setAdditionalProfiles("development")
+    springApplication.setAdditionalProfiles("test")
     springApplication.run(*args)
 }
