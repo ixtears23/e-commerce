@@ -3,6 +3,8 @@ spring:
     name: order
   profiles:
     active: test
+  jpa:
+    open-in-view: false
 
 ---
 
