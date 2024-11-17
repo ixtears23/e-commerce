@@ -5,17 +5,18 @@ import java.math.BigDecimal
 import java.time.LocalDateTime
 
 @Entity
+@Table(name = "orders")
 class OrderEntity (
     @Id
-    @GeneratedValue
-    val orderId: Long,
-    val userId: Long,
-    val orderDate: LocalDateTime,
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    val orderId: Long = 0L,
+    var userId: Long,
+    var orderDate: LocalDateTime,
     @Enumerated(EnumType.STRING)
-    val status: OrderStatus,
-    val totalAmount: BigDecimal,
-    val createdAt: LocalDateTime,
-    val updatedAt: LocalDateTime
+    var status: OrderStatus = OrderStatus.PENDING,
+    var totalAmount: BigDecimal = BigDecimal.ZERO,
+    val createdAt: LocalDateTime = LocalDateTime.now(),
+    var updatedAt: LocalDateTime? = null
 )
 
 enum class OrderStatus(val description: String) {
