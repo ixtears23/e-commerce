@@ -1,5 +1,6 @@
 package junseok.snr.ecommerce.order.entity
 
+import junseok.snr.ecommerce.core.order.model.enums.OrderStatus
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import java.time.LocalDateTime

@@ -1,11 +1,12 @@
-package junseok.snr.ecommerce.order.service
+package junseok.snr.ecommerce.order.application.command
 
-import junseok.snr.ecommerce.core.order.api.enums.OrderStatus
 import junseok.snr.ecommerce.core.order.application.command.CreateOrderCommand
-import junseok.snr.ecommerce.core.order.application.query.GetOrderQuery
-import junseok.snr.ecommerce.core.order.application.query.GetOrdersByUserIdQuery
+import junseok.snr.ecommerce.core.order.application.command.CreateOrderResult
+import junseok.snr.ecommerce.core.order.application.command.UpdateOrderStatusResult
+import junseok.snr.ecommerce.core.order.model.enums.OrderStatus
 import junseok.snr.ecommerce.order.entity.OrderEntity
 import junseok.snr.ecommerce.order.entity.OrderItemEntity
+import junseok.snr.ecommerce.order.mapper.toOrderDto
 import junseok.snr.ecommerce.order.repository.OrderRepository
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -14,11 +15,11 @@ import java.time.LocalDateTime
 
 @Service
 @Transactional(readOnly = true)
-class OrderService(
+class OrderCommandServiceImpl(
     private val orderRepository: OrderRepository
-) {
+): OrderCommandService {
     @Transactional
-    fun createOrder(command: CreateOrderCommand): OrderEntity {
+    override fun createOrder(command: CreateOrderCommand): CreateOrderResult {
         val order = OrderEntity(
             userId = command.userId,
             orderDate = LocalDateTime.now(),
@@ -36,23 +37,20 @@ class OrderService(
         }.toMutableList()
 
         order.orderItems = orderItems
-        return orderRepository.save(order)
-    }
-
-    fun getOrderById(query: GetOrderQuery): OrderEntity {
-        return orderRepository.findById(query.orderId)
-            .orElseThrow { NoSuchElementException("Order not found with id: ${query.orderId}") }
-    }
-
-    fun getOrdersByUserId(query: GetOrdersByUserIdQuery): List<OrderEntity> {
-        return orderRepository.findByUserId(query.userId)
+        return CreateOrderResult(
+            orderRepository.save(order)
+                .toOrderDto()
+        )
     }
 
     @Transactional
-    fun updateOrderStatus(orderId: Long, status: OrderStatus): OrderEntity {
+    override fun updateOrderStatus(orderId: Long, status: OrderStatus): UpdateOrderStatusResult {
         val order = orderRepository.findById(orderId)
             .orElseThrow { NoSuchElementException("Order not found with id: $orderId") }
         order.updateStatus(status)
-        return order
+
+        return UpdateOrderStatusResult(
+            order.toOrderDto()
+        )
     }
 }
