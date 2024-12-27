@@ -16,14 +16,14 @@ data class OrderTable(
     var orderDate: LocalDateTime = LocalDateTime.now(),
     var status: String = OrderStatus.PENDING.name, // String 타입으로 변경
     var totalAmount: BigDecimal = BigDecimal.ZERO,
-    @Transient
-    var orderItems: List<OrderItemTable> = mutableListOf(),
     val createdAt: LocalDateTime = LocalDateTime.now(),
     var updatedAt: LocalDateTime? = null,
     @Transient
     var new: Boolean = true
 
 ) : Persistable<Long> {
+    @Transient
+    var orderItems: List<OrderItemTable> = mutableListOf()
 
     override fun getId(): Long? = orderId
 

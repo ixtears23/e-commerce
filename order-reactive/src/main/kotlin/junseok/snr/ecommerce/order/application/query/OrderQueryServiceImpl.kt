@@ -34,7 +34,7 @@ class OrderQueryServiceImpl(
                         createdAt = rows[0]["created_at"] as LocalDateTime,
                         updatedAt = rows[0]["updated_at"] as LocalDateTime?,
                         new = false,
-                        orderItems = mutableListOf()
+//                        orderItems = mutableListOf()
                     )
                 } ?: throw NoSuchElementException("Order not found with id: ${query.orderId}")
 
