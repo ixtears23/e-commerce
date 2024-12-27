@@ -1,4 +1,4 @@
-package junseok.snr.ecommerce.order.mapper
+package junseok.snr.ecommerce.core.order.mapper
 
 import junseok.snr.ecommerce.core.order.api.request.CreateOrderRequest
 import junseok.snr.ecommerce.core.order.application.command.CreateOrderCommand

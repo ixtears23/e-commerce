@@ -10,8 +10,8 @@ import junseok.snr.ecommerce.core.order.application.query.GetOrdersByUserIdResul
 import junseok.snr.ecommerce.core.order.model.enums.OrderStatus
 import junseok.snr.ecommerce.order.application.command.OrderCommandService
 import junseok.snr.ecommerce.order.application.query.OrderQueryService
-import junseok.snr.ecommerce.order.mapper.toCreateOrderCommand
-import junseok.snr.ecommerce.order.mapper.toOrderApiDto
+import junseok.snr.ecommerce.core.order.mapper.toCreateOrderCommand
+import junseok.snr.ecommerce.core.order.mapper.toOrderApiDto
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import java.net.URI

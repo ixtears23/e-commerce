@@ -1,12 +1,13 @@
 package junseok.snr.ecommerce.order.mapper
 
-import junseok.snr.ecommerce.core.order.api.dto.OrderApiDto
-import junseok.snr.ecommerce.core.order.api.dto.OrderItemApiDto
 import junseok.snr.ecommerce.core.order.application.dto.OrderDto
 import junseok.snr.ecommerce.core.order.application.dto.OrderItemDto
+import junseok.snr.ecommerce.core.order.model.enums.OrderStatus
+import junseok.snr.ecommerce.order.entity.OrderItemTable
+import junseok.snr.ecommerce.order.entity.OrderTable
 
-fun OrderItemDto.toOrderItemApiDto(): OrderItemApiDto {
-    return OrderItemApiDto(
+fun OrderItemTable.toOrderItemDto(): OrderItemDto {
+    return OrderItemDto(
         orderItemId = orderItemId,
         orderId = orderId,
         productId = productId,
@@ -15,15 +16,15 @@ fun OrderItemDto.toOrderItemApiDto(): OrderItemApiDto {
     )
 }
 
-fun OrderDto.toOrderApiDto(): OrderApiDto {
-    return OrderApiDto(
+fun OrderTable.toOrderDto(): OrderDto {
+    return OrderDto(
         orderId = orderId,
         userId = userId,
         orderDate = orderDate,
-        status = status,
+        status = OrderStatus.valueOf(status),
         totalAmount = totalAmount,
         orderItems = orderItems.map {
-            it.toOrderItemApiDto()
+            it.toOrderItemDto()
         },
         createdAt = createdAt,
         updatedAt = updatedAt,

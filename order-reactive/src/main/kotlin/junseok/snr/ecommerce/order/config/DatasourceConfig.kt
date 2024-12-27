@@ -1,45 +1,49 @@
 package junseok.snr.ecommerce.order.config
 
+import com.github.jasync.r2dbc.mysql.JasyncConnectionFactory
+import com.github.jasync.sql.db.mysql.pool.MySQLConnectionFactory
 import io.r2dbc.pool.ConnectionPool
 import io.r2dbc.pool.ConnectionPoolConfiguration
-import io.r2dbc.spi.ConnectionFactories
 import io.r2dbc.spi.ConnectionFactory
-import io.r2dbc.spi.ConnectionFactoryOptions.*
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.context.annotation.Primary
 import org.springframework.context.annotation.Profile
+import org.springframework.data.r2dbc.config.AbstractR2dbcConfiguration
+import org.springframework.data.r2dbc.repository.config.EnableR2dbcRepositories
 import java.time.Duration
 
 @Configuration
-class DatasourceConfig {
+@EnableR2dbcRepositories
+class DatasourceConfig : AbstractR2dbcConfiguration() {
+    @Value("\${spring.r2dbc.database}")
+    private lateinit var database: String
+    @Value("\${spring.r2dbc.host}")
+    private lateinit var host: String
+    @Value("\${spring.r2dbc.port}")
+    private lateinit var port: String
+    @Value("\${spring.r2dbc.username}")
+    private lateinit var username: String
+    @Value("\${spring.r2dbc.password}")
+    private lateinit var password: String
 
-    @Profile("dev")
+    @Primary
     @Bean
-    fun devConnectionFactory(): ConnectionFactory {
-        return ConnectionFactories.get(
-            builder()
-                .option(DRIVER, "org.h2.Driver")
-                .option(HOST, "localhost")
-                .option(PORT, 3306)
-                .option(USER, "dev_user")
-                .option(PASSWORD, "dev_password")
-                .option(DATABASE, "dev_db")
-                .build()
+    override fun connectionFactory(): ConnectionFactory {
+        val configuration = com.github.jasync.sql.db.Configuration(
+            username = username,
+            password = password,
+            database = database,
+            host = host,
+            port = port.toInt()
         )
+        return JasyncConnectionFactory(MySQLConnectionFactory(configuration))
     }
 
     @Profile("test")
     @Bean
-    fun testConnectionFactory(): ConnectionFactory {
-        val factoryOptions = builder()
-            .option(DRIVER, "h2")
-            .option(PROTOCOL, "mem")
-            .option(USER, "sa")
-            .option(DATABASE, "dev_db")
-            .build()
-
-        val connectionFactory = ConnectionFactories.get(factoryOptions)
-
+    fun testConnectionFactory(connectionFactory: ConnectionFactory): ConnectionFactory {
         val poolConfiguration = ConnectionPoolConfiguration.builder(connectionFactory)
             .maxSize(120)
             .initialSize(28)
@@ -47,7 +51,7 @@ class DatasourceConfig {
             .maxLifeTime(Duration.ofSeconds(10))
             .maxAcquireTime(Duration.ofSeconds(10))
             .maxValidationTime(Duration.ofSeconds(1))
-            .name("Test H2 Connection Pool")
+            .name("Test MySQL Connection Pool")
             .build()
 
 
