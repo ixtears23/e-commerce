@@ -5,13 +5,13 @@ import java.math.BigDecimal
 // 주문 생성 Command
 data class CreateOrderCommand(
     val userId: Long,
-    val orderItems: List<OrderItem>
-)
-
-// 주문 상품
-data class OrderItem(
-    val productId: Long,
-    val quantity: Int,
-    val price: BigDecimal
-)
+    val orderItems: List<CreateOrderItemCommand>
+) {
+    // 주문 상품
+    data class CreateOrderItemCommand(
+        val productId: Long,
+        val quantity: Int,
+        val price: BigDecimal
+    )
+}
 

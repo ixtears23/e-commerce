@@ -1,0 +1,25 @@
+services:
+  e-commerce-locust-master:
+    image: locustio/locust
+    ports:
+      - "8089:8089"
+    volumes:
+      - ./:/mnt/locust
+    command:
+      --master
+      -f /mnt/locust/locust_read_write.py
+      --host http://host.docker.internal:8080
+
+  e-commerce-locust-worker:
+    image: locustio/locust
+    deploy:
+      replicas: 3
+    depends_on:
+      - e-commerce-locust-master
+    volumes:
+      - ./:/mnt/locust
+    command:
+      --worker
+      --master-host e-commerce-locust-master
+      -f /mnt/locust/locust_read_write.py
+      --host http://host.docker.internal:8080
