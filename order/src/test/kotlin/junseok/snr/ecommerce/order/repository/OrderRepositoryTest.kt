@@ -11,7 +11,7 @@ import kotlin.test.assertEquals
 
 @DataJpaTest
 @ActiveProfiles(value = ["dev"])
-class OrderJpaRepositoryTest @Autowired constructor(val orderJpaRepository: OrderJpaRepository) {
+class OrderRepositoryTest @Autowired constructor(val orderRepository: OrderRepository) {
 
     @Test
     fun `주문 정보를 등록하는 테스트`() {
@@ -22,9 +22,9 @@ class OrderJpaRepositoryTest @Autowired constructor(val orderJpaRepository: Orde
             orderDate = LocalDateTime.now()
         )
 
-        orderJpaRepository.save(order)
+        orderRepository.save(order)
 
-        val orderList = orderJpaRepository.findByUserId(userId = userId)
+        val orderList = orderRepository.findByUserId(userId = userId)
 
         assertContains(orderList, order)
         assertEquals(orderList.first(), order)

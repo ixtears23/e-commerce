@@ -37,12 +37,10 @@ subprojects {
     dependencies {
         implementation("org.springframework.boot:spring-boot-starter")
         implementation("org.springframework.boot:spring-boot-starter-web")
-        implementation("org.springframework.boot:spring-boot-starter-data-jpa")
         implementation("org.springframework.boot:spring-boot-starter-actuator")
         implementation("com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.10.0")
         implementation("org.jetbrains.kotlin:kotlin-reflect")
         developmentOnly("org.springframework.boot:spring-boot-devtools")
-//        developmentOnly("org.springframework.boot:spring-boot-docker-compose")
         runtimeOnly("com.h2database:h2")
         runtimeOnly("com.mysql:mysql-connector-j")
         runtimeOnly("io.micrometer:micrometer-registry-prometheus")

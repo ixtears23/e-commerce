@@ -3,6 +3,7 @@ val r2dbcPoolVersion = "1.0.2.RELEASE"
 
 dependencies {
     implementation(project(":core"))
+    implementation(project(":core-order"))
     implementation("org.springframework.boot:spring-boot-starter")
     implementation("org.springframework.boot:spring-boot-starter-data-r2dbc")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
