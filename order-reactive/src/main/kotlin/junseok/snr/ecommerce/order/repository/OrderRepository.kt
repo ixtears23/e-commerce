@@ -11,10 +11,30 @@ import reactor.core.publisher.Mono
 
 @Repository
 interface OrderRepository : ReactiveCrudRepository<OrderTable, Long> {
-    @Query("SELECT * FROM orders WHERE user_id = :userId")
+    @Query("""
+        SELECT order_id,
+               created_at,
+               order_date,
+               status,
+               total_amount,
+               updated_at,
+               user_id
+          FROM orders
+         WHERE user_id = :userId
+        """)
     fun findByUserId(@Param("userId") userId: Long): Flux<OrderTable>
 
-    @Query("SELECT * FROM orders WHERE order_id = :orderId")
+    @Query("""
+        SELECT order_id,
+               created_at,
+               order_date,
+               status,
+               total_amount,
+               updated_at,
+               user_id
+          FROM orders
+         WHERE order_id = :orderId
+        """)
     fun findByOrderId(@Param("orderId") orderId: Long): Mono<OrderTable>
 
     @Query("""

@@ -28,7 +28,6 @@ class OrderCommandServiceImpl(
             orderDate = LocalDateTime.now(),
             status = OrderStatus.PENDING.name,
             totalAmount = command.orderItems.sumOf { it.price * BigDecimal(it.quantity) },
-            new = true
         )
 
         return orderRepository.save(order)
@@ -58,7 +57,6 @@ class OrderCommandServiceImpl(
             .switchIfEmpty(Mono.error(NoSuchElementException("Order not found with id: $orderId")))
             .flatMap { order ->
                 order.updateStatus(status)
-                order.new = false
                 orderRepository.save(order)
             }
 

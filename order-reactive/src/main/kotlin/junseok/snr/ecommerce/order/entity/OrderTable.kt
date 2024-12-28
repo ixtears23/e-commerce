@@ -18,16 +18,15 @@ data class OrderTable(
     var totalAmount: BigDecimal = BigDecimal.ZERO,
     val createdAt: LocalDateTime = LocalDateTime.now(),
     var updatedAt: LocalDateTime? = null,
-    @Transient
-    var new: Boolean = true
 
 ) : Persistable<Long> {
     @Transient
     var orderItems: List<OrderItemTable> = mutableListOf()
 
-    override fun getId(): Long? = orderId
-
-    override fun isNew(): Boolean = new
+    override fun getId(): Long = orderId
+    override fun isNew(): Boolean {
+        return orderId.toInt() == 0
+    }
 
     fun updateStatus(newStatus: OrderStatus) {
         this.status = newStatus.name
