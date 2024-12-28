@@ -92,6 +92,14 @@ services:
       - backend_network
     restart: always
 
+  zipkin:
+    image: openzipkin/zipkin
+    container_name: zipkin
+    ports:
+      - "9411:9411"
+    networks:
+      - backend_network
+
 volumes:
   mongodb_data:
   mysql_e_commerce_data:

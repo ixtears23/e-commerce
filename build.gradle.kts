@@ -37,8 +37,13 @@ subprojects {
     dependencies {
         implementation("org.springframework.boot:spring-boot-starter")
         implementation("org.springframework.boot:spring-boot-starter-web")
+
         implementation("org.springframework.boot:spring-boot-starter-actuator")
         implementation("io.micrometer:micrometer-registry-prometheus")
+
+        implementation("io.micrometer:micrometer-tracing-bridge-brave")
+        implementation("io.zipkin.reporter2:zipkin-reporter-brave")
+
         implementation("com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.10.0")
         implementation("org.jetbrains.kotlin:kotlin-reflect")
         developmentOnly("org.springframework.boot:spring-boot-devtools")
