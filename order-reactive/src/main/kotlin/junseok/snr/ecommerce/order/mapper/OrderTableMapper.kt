@@ -30,3 +30,17 @@ fun OrderTable.toOrderDto(): OrderDto {
         updatedAt = updatedAt,
     )
 }
+
+
+fun OrderTable.toOrderDto(orderItemEntities: List<OrderItemTable>): OrderDto {
+    return OrderDto(
+        orderId = orderId,
+        userId = userId,
+        orderDate = orderDate,
+        status = OrderStatus.valueOf(status),
+        totalAmount = totalAmount,
+        orderItems = orderItemEntities.map { it.toOrderItemDto() }, // orderItems 매핑 추가
+        createdAt = createdAt,
+        updatedAt = updatedAt,
+    )
+}

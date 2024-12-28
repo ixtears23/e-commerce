@@ -68,7 +68,7 @@ class OrderQueryServiceImpl(
                 val orderItemEntities = orderItemPairs.flatMap { it.second }
                 GetOrdersByUserIdResult(
                     orders = orderEntities.map {
-                        it.toOrderDto()
+                        it.toOrderDto(orderItemEntities)
                     }
                 )
             }
