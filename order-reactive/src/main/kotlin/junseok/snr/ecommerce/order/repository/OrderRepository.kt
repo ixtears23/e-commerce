@@ -43,7 +43,7 @@ interface OrderRepository : ReactiveCrudRepository<OrderTable, Long> {
         LEFT JOIN order_items oi ON o.order_id = oi.order_id 
         WHERE o.order_id = :orderId
     """)
-    fun findOrderWithItemsById(@Param("orderId") orderId: Long): Flux<Map<String, Any>>
+    fun findOrderWithItemsById(@Param("orderId") orderId: Long): Flux<OrderWithItemDto>
 }
 
 @Repository

@@ -31,15 +31,35 @@ class DatasourceConfig : AbstractR2dbcConfiguration() {
     @Primary
     @Bean
     override fun connectionFactory(): ConnectionFactory {
-        val configuration = com.github.jasync.sql.db.Configuration(
+        val mySQLConnectionFactory = MySQLConnectionFactory(mySQLConnectionConfig())
+        val jasyncConnectionFactory = JasyncConnectionFactory(mySQLConnectionFactory)
+        val r2dbcPoolConfig = connectionPoolConfiguration(jasyncConnectionFactory)
+        val r2dbcPool = ConnectionPool(r2dbcPoolConfig)
+
+        // Application 시작 전에 DB Connection Pool 초기화
+        r2dbcPool.warmup().block()
+
+        return r2dbcPool
+    }
+
+    private fun connectionPoolConfiguration(connectionFactory: ConnectionFactory) =
+        ConnectionPoolConfiguration.builder()
+            .connectionFactory(connectionFactory)
+            .initialSize(50)
+            .minIdle(25)
+            .maxSize(50)
+            .build()
+
+    private fun mySQLConnectionConfig() =
+        com.github.jasync.sql.db.Configuration(
             username = username,
             password = password,
             database = database,
             host = host,
-            port = port.toInt()
+            port = port.toInt(),
+            connectionTimeout = 2_000,
+            queryTimeout = Duration.ofSeconds(30_000)
         )
-        return JasyncConnectionFactory(MySQLConnectionFactory(configuration))
-    }
 
     @Profile("test")
     @Bean

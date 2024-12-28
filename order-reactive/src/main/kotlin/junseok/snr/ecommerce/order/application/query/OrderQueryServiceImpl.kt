@@ -24,27 +24,25 @@ class OrderQueryServiceImpl(
             .collectList()
             .map { rows ->
                 if (rows.isEmpty()) throw NoSuchElementException("Order not found with id: ${query.orderId}")
-                val order = rows[0]["order_id"]?.let { orderId ->
-                    OrderTable(
-                        orderId = orderId as Long,
-                        userId = rows[0]["user_id"] as Long,
-                        orderDate = rows[0]["order_date"] as LocalDateTime,
-                        status = rows[0]["status"] as String,
-                        totalAmount = rows[0]["total_amount"] as BigDecimal,
-                        createdAt = rows[0]["created_at"] as LocalDateTime,
-                        updatedAt = rows[0]["updated_at"] as LocalDateTime?,
-//                        orderItems = mutableListOf()
-                    )
-                } ?: throw NoSuchElementException("Order not found with id: ${query.orderId}")
+                val first = rows.first()
+                val order = OrderTable(
+                    orderId = first.orderId,
+                    userId = first.userId,
+                    orderDate = first.orderDate,
+                    status = first.status,
+                    totalAmount = first.totalAmount,
+                    createdAt = first.createdAt,
+                    updatedAt = first.updatedAt,
+                )
 
-                val orderItems = rows.filter { it["order_item_id"] != null }
-                    .map { row ->
+                val orderItems = rows.filter { it.orderItemId != null }
+                    .map {
                         OrderItemTable(
-                            orderItemId = row["order_item_id"] as Long,
+                            orderItemId = it.orderItemId!!,
                             orderId = order.orderId,
-                            productId = row["product_id"] as Long,
-                            quantity = row["quantity"] as Int,
-                            price = row["price"] as BigDecimal
+                            productId = it.productId!!,
+                            quantity = it.quantity!!,
+                            price = it.price!!
                         )
                     }
 

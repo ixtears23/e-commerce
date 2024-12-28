@@ -2,21 +2,20 @@ from locust import HttpUser, TaskSet, task, between
 import random
 import json
 
-USER_IDS = [1, 2, 3, 4, 5]
-PRODUCT_IDS = [101, 102, 103, 104, 105]
+# USER_IDS와 PRODUCT_IDS를 범위로 변경
+USER_ID_RANGE = (1, 1000)  # 1 ~ 1000
+PRODUCT_ID_RANGE = (1, 100)  # 1 ~ 100
 ORDER_STATUSES = ["PENDING", "PAID", "SHIPPED", "COMPLETED", "CANCELLED"]
-# 테스트를 위해 생성된 주문 ID 목록 (실제 환경에서는 동적으로 조회 또는 생성해야 함)
-ORDER_IDS = [1, 2, 3, 4, 5]
 
-class AllUserBehavior(TaskSet):
+class CreateUpdateUserBehavior(TaskSet):
 
     def on_start(self):
         self.order_ids = []
 
-    @task(3)  # 주문 생성
+    @task(4)
     def create_order(self):
-        user_id = random.choice(USER_IDS)
-        product_id = random.choice(PRODUCT_IDS)
+        user_id = random.randint(*USER_ID_RANGE)  # 랜덤 userId 생성
+        product_id = random.randint(*PRODUCT_ID_RANGE)  # 랜덤 productId 생성
         quantity = random.randint(1, 5)
         price = round(random.uniform(10.0, 100.0), 2)
 
@@ -39,7 +38,7 @@ class AllUserBehavior(TaskSet):
             else:
                 response.failure("Failed to create order: " + response.text)
 
-    @task(1)  # 주문 상태 업데이트
+    @task(1)
     def update_order_status(self):
         if not self.order_ids:
             return
@@ -51,25 +50,6 @@ class AllUserBehavior(TaskSet):
             if response.status_code != 200:
                 response.failure("Failed to update order status: " + response.text)
 
-    @task(2)  # 사용자 주문 목록 조회
-    def get_orders_by_user_id(self):
-        user_id = random.choice(USER_IDS)
-        with self.client.get(f"/api/v1/orders/user/{user_id}", catch_response=True) as response:
-            if response.status_code != 200:
-                response.failure("Failed to get orders by user ID: " + response.text)
-
-    @task(4)  # 주문 ID로 조회
-    def get_order_by_id(self):
-        if not self.order_ids and not ORDER_IDS:
-            return
-
-        # 생성한 주문 또는 기존 주문 ID 중에서 무작위 선택
-        order_id = random.choice(self.order_ids if self.order_ids else ORDER_IDS)
-
-        with self.client.get(f"/api/v1/orders/{order_id}", catch_response=True) as response:
-            if response.status_code != 200:
-                response.failure("Failed to get order by ID: " + response.text)
-
-class AllUser(HttpUser):
-    tasks = [AllUserBehavior]
+class CreateUpdateUser(HttpUser):
+    tasks = [CreateUpdateUserBehavior]
     wait_time = between(1, 3)

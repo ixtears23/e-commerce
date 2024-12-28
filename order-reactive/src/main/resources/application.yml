@@ -19,8 +19,8 @@ spring:
     password: secret
     pool:
       enabled: true
-      initial-size: 5
-      max-size: 10
+      initial-size: 100
+      max-size: 100
       max-idle-time: PT30M
 
 management:
