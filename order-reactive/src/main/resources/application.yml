@@ -23,6 +23,23 @@ spring:
       max-size: 10
       max-idle-time: PT30M
 
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    prometheus:
+      enabled: true
+  metrics:
+    export:
+      prometheus:
+        enabled: true
+
+    # Micrometer 설정 (선택 사항)
+    tags:
+      application: ${spring.application.name} # 메트릭에 태그 추가
+
 logging:
   level:
     org.hibernate.SQL: INFO

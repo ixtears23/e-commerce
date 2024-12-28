@@ -7,7 +7,7 @@ services:
       - ./:/mnt/locust
     command:
       --master
-      -f /mnt/locust/locust_read_write.py
+      -f /mnt/locust/locust_create_update.py
       --host http://host.docker.internal:8080
 
   e-commerce-locust-worker:
@@ -21,5 +21,5 @@ services:
     command:
       --worker
       --master-host e-commerce-locust-master
-      -f /mnt/locust/locust_read_write.py
+      -f /mnt/locust/locust_create_update.py
       --host http://host.docker.internal:8080

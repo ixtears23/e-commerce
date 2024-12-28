@@ -1,0 +1,12 @@
+global:
+  scrape_interval: 15s # 메트릭 수집 간격
+
+scrape_configs:
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090']
+  - job_name: 'order-service' # 서비스 이름은 프로젝트에 맞게 변경
+    metrics_path: '/actuator/prometheus' # actuator prometheus 엔드포인트
+    scheme: http
+    static_configs:
+      - targets: ['host.docker.internal:8080'] # 서비스 이름과 포트 변경, actuator 포트
