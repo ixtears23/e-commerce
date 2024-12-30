@@ -13,7 +13,7 @@ services:
   e-commerce-locust-worker:
     image: locustio/locust
     deploy:
-      replicas: 7
+      replicas: 4
     depends_on:
       - e-commerce-locust-master
     volumes:

@@ -4,6 +4,8 @@ import junseok.snr.ecommerce.core.order.application.query.GetOrderByIdQuery
 import junseok.snr.ecommerce.core.order.application.query.GetOrderByIdResult
 import junseok.snr.ecommerce.core.order.application.query.GetOrdersByUserIdQuery
 import junseok.snr.ecommerce.core.order.application.query.GetOrdersByUserIdResult
+import junseok.snr.ecommerce.order.application.exception.OrderError
+import junseok.snr.ecommerce.order.application.exception.OrderNotFoundException
 import junseok.snr.ecommerce.order.mapper.toOrderDto
 import junseok.snr.ecommerce.order.repository.OrderRepository
 import org.springframework.stereotype.Service
@@ -18,7 +20,11 @@ class OrderQueryServiceImpl(
     override fun getOrderById(query: GetOrderByIdQuery): GetOrderByIdResult {
         return GetOrderByIdResult(
             orderRepository.findById(query.orderId)
-                .orElseThrow { NoSuchElementException("Order not found with id: ${query.orderId}") }
+                .orElseThrow {
+                    OrderNotFoundException(
+                        OrderError.ORDER_NOT_FOUND, query.orderId.toString()
+                    )
+                }
                 .toOrderDto()
         )
     }
